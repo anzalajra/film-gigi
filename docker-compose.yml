@@ -1,0 +1,42 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/filmgigi
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@filmgigi.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-changeme}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    command: >
+      sh -c "
+        node node_modules/prisma/build/index.js migrate deploy &&
+        node node_modules/tsx/dist/esm/cli.js prisma/seed.ts &&
+        node server.js
+      "
+    volumes:
+      - uploads:/app/public/uploads
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: filmgigi
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  uploads:

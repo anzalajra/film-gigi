@@ -1,0 +1,58 @@
+services:
+  app:
+    build: .
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/filmgigi
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      AUTH_TRUST_HOST: "true"
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    command: >
+      sh -c "
+        node node_modules/prisma/build/index.js migrate deploy &&
+        node node_modules/tsx/dist/esm/cli.js prisma/seed.ts &&
+        node server.js
+      "
+    volumes:
+      - uploads:/app/public/uploads
+    networks:
+      - dokploy-network
+      - internal
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.filmgigi.rule=Host(`${APP_DOMAIN}`)
+      - traefik.http.routers.filmgigi.entrypoints=websecure
+      - traefik.http.routers.filmgigi.tls.certresolver=letsencrypt
+      - traefik.http.services.filmgigi.loadbalancer.server.port=3000
+      - traefik.docker.network=dokploy-network
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: filmgigi
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    networks:
+      - internal
+
+networks:
+  dokploy-network:
+    external: true
+  internal:
+
+volumes:
+  pgdata:
+  uploads:

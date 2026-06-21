@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model SiteConfig {
+  id               Int      @id @default(1)
+  heroTitle        String   @default("Crowdfunding Film Gigi")
+  heroSubtitle     String   @default("")
+  heroImageUrl     String   @default("")
+  logoUrl          String   @default("")
+  synopsis         String   @default("")
+  videoUrl         String   @default("")
+  whyImportant     String   @default("")
+  pdfUrl           String   @default("")
+  targetAmount     Int      @default(20000000)
+  contactWhatsapp  String   @default("")
+  contactInstagram String   @default("")
+  contactEmail     String   @default("")
+  qrisString       String   @default("")
+  qrisActive       Boolean  @default(false)
+  qrisMinAmount    Int      @default(10000)
+  updatedAt        DateTime @updatedAt
+}
+
+model SlideImage {
+  id        Int     @id @default(autoincrement())
+  imageUrl  String
+  caption   String?
+  sortOrder Int     @default(0)
+  active    Boolean @default(true)
+}
+
+model Donation {
+  id          Int      @id @default(autoincrement())
+  name        String
+  amount      Int
+  message     String?
+  isPublic    Boolean  @default(true)
+  showAmount  Boolean  @default(true)
+  isAnonymous Boolean  @default(false)
+  donatedAt   DateTime @default(now())
+  createdAt   DateTime @default(now())
+}
+
+model Sponsor {
+  id        Int     @id @default(autoincrement())
+  name      String
+  logoUrl   String
+  website   String?
+  sortOrder Int     @default(0)
+  active    Boolean @default(true)
+}
+
+model SupportPackage {
+  id          Int     @id @default(autoincrement())
+  name        String
+  amount      Int
+  description String
+  benefits    String  @default("[]")
+  sortOrder   Int     @default(0)
+  active      Boolean @default(true)
+}
+
+model ProductionTeam {
+  id        Int     @id @default(autoincrement())
+  name      String
+  role      String
+  imageUrl  String?
+  sortOrder Int     @default(0)
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
