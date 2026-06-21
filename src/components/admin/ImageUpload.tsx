@@ -33,10 +33,10 @@ export default function ImageUpload({ value, onChange, label = "Gambar" }: Props
   };
 
   return (
-    <div className="space-y-2">
-      <label className="block text-white/60 text-sm">{label}</label>
+    <div className="space-y-1.5">
+      <label className="block text-white/60 text-xs font-medium">{label}</label>
       <div
-        className="relative border-2 border-dashed border-white/15 rounded-xl p-4 text-center cursor-pointer hover:border-white/30 transition-colors"
+        className="relative border-2 border-dashed border-white/12 bg-white/[0.02] rounded-xl p-4 text-center cursor-pointer hover:border-[#f5c842]/40 hover:bg-white/[0.03] transition-colors"
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {

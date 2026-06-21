@@ -1,14 +1,12 @@
 import { db } from "@/lib/db";
 import TeamClient from "./TeamClient";
+import { PageHeader } from "@/components/admin/ui";
 
 export default async function TeamPage() {
   const team = await db.productionTeam.findMany({ orderBy: { sortOrder: "asc" } });
   return (
-    <div className="space-y-6 pt-8 md:pt-0">
-      <div>
-        <h1 className="text-2xl font-bold text-white">Tim Produksi</h1>
-        <p className="text-white/40 text-sm mt-1">Kelola anggota tim yang ditampilkan</p>
-      </div>
+    <div className="space-y-6">
+      <PageHeader title="Tim Produksi" subtitle="Kelola anggota tim yang ditampilkan" />
       <TeamClient team={team} />
     </div>
   );
