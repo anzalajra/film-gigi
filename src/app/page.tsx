@@ -85,7 +85,7 @@ export default async function StorefrontPage() {
 
       <ProgressSection totalRaised={totalRaised} target={config.targetAmount} />
 
-      <PackagesSection packages={packages} />
+      <PackagesSection packages={packages} qrisString={config.qrisActive ? config.qrisString : undefined} />
 
       <DonorsSection donors={donations} />
 

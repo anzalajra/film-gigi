@@ -24,6 +24,7 @@ model SiteConfig {
   qrisString       String   @default("")
   qrisActive       Boolean  @default(false)
   qrisMinAmount    Int      @default(10000)
+  qrisImageUrl     String   @default("")
   updatedAt        DateTime @updatedAt
 }
 

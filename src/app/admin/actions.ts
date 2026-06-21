@@ -28,6 +28,7 @@ export async function updateSiteConfig(data: {
   qrisString?: string;
   qrisActive?: boolean;
   qrisMinAmount?: number;
+  qrisImageUrl?: string;
 }) {
   await checkAuth();
   await db.siteConfig.upsert({
