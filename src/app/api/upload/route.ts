@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { writeFile, mkdir } from "fs/promises";
+import { writeFile, mkdir, access } from "fs/promises";
 import path from "path";
-import { randomUUID } from "crypto";
+
+async function fileExists(p: string) {
+  try {
+    await access(p);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 export async function POST(req: NextRequest) {
   const session = await auth();
@@ -31,11 +39,30 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-  const filename = `${randomUUID()}.${ext}`;
   const uploadDir = path.join(process.cwd(), "public", "uploads");
-
   await mkdir(uploadDir, { recursive: true });
+
+  // Keep the original file name (only sanitise characters that are unsafe for
+  // URLs / the filesystem) instead of renaming to a random id.
+  const original = file.name || "file";
+  const dot = original.lastIndexOf(".");
+  const rawBase = dot > 0 ? original.slice(0, dot) : original;
+  const ext = (dot > 0 ? original.slice(dot + 1) : "").toLowerCase() || (isPdf ? "pdf" : "jpg");
+
+  const safeBase =
+    rawBase
+      .normalize("NFKD")
+      .replace(/[^\w.\- ]+/g, "")
+      .trim()
+      .replace(/\s+/g, "-") || "file";
+
+  // Avoid silently overwriting a different file that has the same name.
+  let filename = `${safeBase}.${ext}`;
+  let n = 1;
+  while (await fileExists(path.join(uploadDir, filename))) {
+    filename = `${safeBase}-${n}.${ext}`;
+    n++;
+  }
 
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);

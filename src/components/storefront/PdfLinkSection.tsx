@@ -1,7 +1,12 @@
 import { FileText } from "lucide-react";
+import { uploadFileUrl } from "@/lib/utils";
 
 export default function PdfLinkSection({ pdfUrl }: { pdfUrl: string }) {
   if (!pdfUrl) return null;
+
+  const viewerUrl = uploadFileUrl(pdfUrl);
+  const downloadUrl = uploadFileUrl(pdfUrl, { download: true });
+
   return (
     <section className="py-12 px-4">
       <div className="max-w-3xl mx-auto space-y-6">
@@ -11,7 +16,7 @@ export default function PdfLinkSection({ pdfUrl }: { pdfUrl: string }) {
             <p className="text-white/50 text-sm">Lihat atau unduh proposal lengkap untuk detail anggaran dan timeline produksi.</p>
           </div>
           <a
-            href={pdfUrl}
+            href={downloadUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-6 py-3 border border-white/20 rounded-xl text-white text-sm hover:border-[#f5c842] hover:text-[#f5c842] transition-colors whitespace-nowrap"
@@ -23,7 +28,7 @@ export default function PdfLinkSection({ pdfUrl }: { pdfUrl: string }) {
 
         <div className="rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02]">
           <iframe
-            src={`${pdfUrl}#view=FitH`}
+            src={`${viewerUrl}#view=FitH`}
             title="Rincian Proyek Film"
             className="w-full h-[60vh] sm:h-[80vh]"
           />

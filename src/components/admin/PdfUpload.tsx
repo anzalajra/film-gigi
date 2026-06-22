@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { Upload, X, FileText } from "lucide-react";
 import { toast } from "sonner";
+import { uploadFileUrl } from "@/lib/utils";
 
 interface Props {
   value: string;
@@ -42,12 +43,12 @@ export default function PdfUpload({ value, onChange, label = "PDF" }: Props) {
         <div className="flex items-center gap-3 border border-white/12 bg-white/[0.02] rounded-xl p-3">
           <FileText size={20} className="text-[#f5c842] shrink-0" />
           <a
-            href={value}
+            href={uploadFileUrl(value)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex-1 min-w-0 truncate text-white/70 text-xs hover:text-[#f5c842] underline"
           >
-            {value.split("/").pop()}
+            {decodeURIComponent(value.split("/").pop() ?? "")}
           </a>
           <button
             type="button"
