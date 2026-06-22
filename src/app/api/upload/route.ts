@@ -17,14 +17,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
 
-  const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif", "application/pdf"];
   if (!allowedTypes.includes(file.type)) {
     return NextResponse.json({ error: "File type not allowed" }, { status: 400 });
   }
 
-  const maxSize = 5 * 1024 * 1024; // 5MB
+  const isPdf = file.type === "application/pdf";
+  const maxSize = isPdf ? 20 * 1024 * 1024 : 5 * 1024 * 1024; // 20MB pdf, 5MB image
   if (file.size > maxSize) {
-    return NextResponse.json({ error: "File too large (max 5MB)" }, { status: 400 });
+    return NextResponse.json(
+      { error: `File too large (max ${isPdf ? "20MB" : "5MB"})` },
+      { status: 400 }
+    );
   }
 
   const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";

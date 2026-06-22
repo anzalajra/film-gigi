@@ -3,6 +3,7 @@ import Navbar from "@/components/storefront/Navbar";
 import HeroSection from "@/components/storefront/HeroSection";
 import SynopsisSection from "@/components/storefront/SynopsisSection";
 import VideoSection from "@/components/storefront/VideoSection";
+import StatementSection from "@/components/storefront/StatementSection";
 import SlideshowSection from "@/components/storefront/SlideshowSection";
 import QrisSection from "@/components/storefront/QrisSection";
 import WhyImportantSection from "@/components/storefront/WhyImportantSection";
@@ -59,15 +60,25 @@ export default async function StorefrontPage() {
 
       <VideoSection videoUrl={config.videoUrl} />
 
-      <SlideshowSection images={slides} />
+      <StatementSection
+        sectionId="producer"
+        label="Producer Statement"
+        name={config.producerName}
+        imageUrl={config.producerImageUrl}
+        quote={config.producerQuote}
+      />
 
-      {config.qrisActive && config.qrisString && (
-        <QrisSection
-          qrisString={config.qrisString}
-          minAmount={config.qrisMinAmount}
-          sectionId="donasi"
-        />
-      )}
+      <StatementSection
+        sectionId="director"
+        label="Director Statement"
+        name={config.directorName}
+        imageUrl={config.directorImageUrl}
+        quote={config.directorQuote}
+        reverse
+        dark
+      />
+
+      <SlideshowSection images={slides} />
 
       <WhyImportantSection content={config.whyImportant} />
 
@@ -79,7 +90,7 @@ export default async function StorefrontPage() {
         <QrisSection
           qrisString={config.qrisString}
           minAmount={config.qrisMinAmount}
-          sectionId="donasi-2"
+          sectionId="donasi"
         />
       )}
 

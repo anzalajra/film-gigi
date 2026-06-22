@@ -21,6 +21,12 @@ export async function updateSiteConfig(data: {
   videoUrl?: string;
   whyImportant?: string;
   pdfUrl?: string;
+  producerName?: string;
+  producerImageUrl?: string;
+  producerQuote?: string;
+  directorName?: string;
+  directorImageUrl?: string;
+  directorQuote?: string;
   targetAmount?: number;
   contactWhatsapp?: string;
   contactInstagram?: string;
@@ -99,6 +105,39 @@ export async function deleteDonation(id: number) {
   await checkAuth();
   await db.donation.delete({ where: { id } });
   revalidatePath("/");
+  revalidatePath("/admin/donations");
+}
+
+// ─── Donation Confirmations ───────────────────────────────────
+
+export async function confirmDonationConfirmation(id: number) {
+  await checkAuth();
+  const confirmation = await db.donationConfirmation.findUnique({ where: { id } });
+  if (!confirmation) throw new Error("Konfirmasi tidak ditemukan");
+  if (confirmation.status === "confirmed") return;
+
+  await db.$transaction([
+    db.donation.create({
+      data: {
+        name: confirmation.name,
+        amount: confirmation.amount,
+        message: confirmation.message ?? undefined,
+        isAnonymous: confirmation.isAnonymous,
+      },
+    }),
+    db.donationConfirmation.update({
+      where: { id },
+      data: { status: "confirmed" },
+    }),
+  ]);
+
+  revalidatePath("/");
+  revalidatePath("/admin/donations");
+}
+
+export async function deleteDonationConfirmation(id: number) {
+  await checkAuth();
+  await db.donationConfirmation.delete({ where: { id } });
   revalidatePath("/admin/donations");
 }
 

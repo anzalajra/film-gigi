@@ -17,6 +17,12 @@ model SiteConfig {
   videoUrl         String   @default("")
   whyImportant     String   @default("")
   pdfUrl           String   @default("")
+  producerName     String   @default("")
+  producerImageUrl String   @default("")
+  producerQuote    String   @default("")
+  directorName     String   @default("")
+  directorImageUrl String   @default("")
+  directorQuote    String   @default("")
   targetAmount     Int      @default(20000000)
   contactWhatsapp  String   @default("")
   contactInstagram String   @default("")
@@ -45,6 +51,17 @@ model Donation {
   showAmount  Boolean  @default(true)
   isAnonymous Boolean  @default(false)
   donatedAt   DateTime @default(now())
+  createdAt   DateTime @default(now())
+}
+
+model DonationConfirmation {
+  id          Int      @id @default(autoincrement())
+  name        String
+  amount      Int
+  message     String?
+  isAnonymous Boolean  @default(false)
+  proofUrl    String
+  status      String   @default("pending") // pending | confirmed
   createdAt   DateTime @default(now())
 }
 

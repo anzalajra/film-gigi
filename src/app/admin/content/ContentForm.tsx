@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { updateSiteConfig } from "../actions";
 import ImageUpload from "@/components/admin/ImageUpload";
+import PdfUpload from "@/components/admin/PdfUpload";
 import { Button, Card, Field, Input, Textarea } from "@/components/admin/ui";
 
 interface Config {
@@ -15,6 +16,12 @@ interface Config {
   videoUrl: string;
   whyImportant: string;
   pdfUrl: string;
+  producerName: string;
+  producerImageUrl: string;
+  producerQuote: string;
+  directorName: string;
+  directorImageUrl: string;
+  directorQuote: string;
 }
 
 export default function ContentForm({ config }: { config: Config | null }) {
@@ -27,6 +34,12 @@ export default function ContentForm({ config }: { config: Config | null }) {
     videoUrl: config?.videoUrl ?? "",
     whyImportant: config?.whyImportant ?? "",
     pdfUrl: config?.pdfUrl ?? "",
+    producerName: config?.producerName ?? "",
+    producerImageUrl: config?.producerImageUrl ?? "",
+    producerQuote: config?.producerQuote ?? "",
+    directorName: config?.directorName ?? "",
+    directorImageUrl: config?.directorImageUrl ?? "",
+    directorQuote: config?.directorQuote ?? "",
   });
   const [saving, setSaving] = useState(false);
 
@@ -78,9 +91,55 @@ export default function ContentForm({ config }: { config: Config | null }) {
         <Field label="Alasan Film Penting" hint="Mendukung format markdown.">
           <Textarea {...bind("whyImportant")} rows={6} placeholder="Kenapa film ini layak didukung..." />
         </Field>
-        <Field label="Link PDF Rincian Proyek">
-          <Input {...bind("pdfUrl")} placeholder="https://..." />
-        </Field>
+        <PdfUpload
+          value={form.pdfUrl}
+          onChange={(url) => setForm((f) => ({ ...f, pdfUrl: url }))}
+          label="PDF Rincian Proyek"
+        />
+      </Card>
+
+      <Card className="p-6 space-y-6">
+        <div>
+          <h3 className="text-white font-semibold text-sm">Producer Statement</h3>
+          <p className="text-white/40 text-xs mt-0.5">Foto dan kutipan dari produser. Tampil setelah trailer.</p>
+        </div>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <ImageUpload
+            value={form.producerImageUrl}
+            onChange={(url) => setForm((f) => ({ ...f, producerImageUrl: url }))}
+            label="Foto Producer"
+          />
+          <div className="space-y-4">
+            <Field label="Nama Producer">
+              <Input {...bind("producerName")} placeholder="Nama produser" />
+            </Field>
+            <Field label="Kutipan">
+              <Textarea {...bind("producerQuote")} rows={5} placeholder="Tulis kutipan/statement produser..." />
+            </Field>
+          </div>
+        </div>
+      </Card>
+
+      <Card className="p-6 space-y-6">
+        <div>
+          <h3 className="text-white font-semibold text-sm">Director Statement</h3>
+          <p className="text-white/40 text-xs mt-0.5">Foto dan kutipan dari sutradara. Tampil setelah Producer Statement.</p>
+        </div>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <ImageUpload
+            value={form.directorImageUrl}
+            onChange={(url) => setForm((f) => ({ ...f, directorImageUrl: url }))}
+            label="Foto Director"
+          />
+          <div className="space-y-4">
+            <Field label="Nama Director">
+              <Input {...bind("directorName")} placeholder="Nama sutradara" />
+            </Field>
+            <Field label="Kutipan">
+              <Textarea {...bind("directorQuote")} rows={5} placeholder="Tulis kutipan/statement sutradara..." />
+            </Field>
+          </div>
+        </div>
       </Card>
 
       <div className="flex justify-end">
