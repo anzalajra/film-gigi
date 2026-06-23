@@ -13,13 +13,20 @@ async function checkAuth() {
 // ─── SiteConfig ───────────────────────────────────────────────
 
 export async function updateSiteConfig(data: {
+  heroEyebrow?: string;
   heroTitle?: string;
   heroSubtitle?: string;
   heroImageUrl?: string;
   logoUrl?: string;
   synopsis?: string;
   videoUrl?: string;
+  videoThumb?: string;
   whyImportant?: string;
+  whyPoints?: string;
+  parallaxImage?: string;
+  parallaxQuote?: string;
+  parallaxAttr?: string;
+  donateParallax?: string;
   pdfUrl?: string;
   producerName?: string;
   producerImageUrl?: string;

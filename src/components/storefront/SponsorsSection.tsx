@@ -1,4 +1,5 @@
-import Image from "next/image";
+import { type CSSProperties } from "react";
+import { Section } from "./ds";
 
 interface Sponsor {
   id: number;
@@ -9,45 +10,46 @@ interface Sponsor {
 
 export default function SponsorsSection({ sponsors }: { sponsors: Sponsor[] }) {
   if (!sponsors.length) return null;
+
+  const chipStyle: CSSProperties = {
+    padding: "var(--space-4) var(--space-6)",
+    borderRadius: "var(--radius-xl)",
+    border: "1px solid var(--line)",
+    background: "var(--fg-card-soft)",
+    color: "var(--ink-60)",
+    fontWeight: "var(--weight-semibold)" as CSSProperties["fontWeight"],
+    fontSize: "var(--text-sm)",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    textDecoration: "none",
+  };
+
   return (
-    <section id="sponsor" className="py-24 px-4">
-      <div className="max-w-4xl mx-auto">
-        <p className="uppercase tracking-[0.3em] text-[#f5c842] text-xs mb-4 font-medium">Sponsor</p>
-        <div className="w-12 h-px bg-[#f5c842] mb-10" />
-        <div className="flex flex-wrap justify-center gap-10 sm:gap-14 items-center">
-          {sponsors.map((sponsor) => (
-            <div key={sponsor.id}>
-              {sponsor.website ? (
-                <a
-                  href={sponsor.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block opacity-70 hover:opacity-100 transition-opacity"
-                  title={sponsor.name}
-                >
-                  <Image
-                    src={sponsor.logoUrl}
-                    alt={sponsor.name}
-                    width={280}
-                    height={120}
-                    className="h-20 sm:h-28 w-auto object-contain filter brightness-0 invert"
-                  />
-                </a>
-              ) : (
-                <div className="opacity-70">
-                  <Image
-                    src={sponsor.logoUrl}
-                    alt={sponsor.name}
-                    width={280}
-                    height={120}
-                    className="h-20 sm:h-28 w-auto object-contain filter brightness-0 invert"
-                  />
-                </div>
-              )}
+    <Section id="sponsor" eyebrow="Didukung Oleh" center>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-4)", justifyContent: "center" }}>
+        {sponsors.map((s) => {
+          const inner = s.logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={s.logoUrl}
+              alt={s.name}
+              style={{ height: "1.75rem", width: "auto", objectFit: "contain", filter: "brightness(0) invert(1)", opacity: 0.8 }}
+            />
+          ) : (
+            s.name
+          );
+          return s.website ? (
+            <a key={s.id} href={s.website} target="_blank" rel="noopener noreferrer" title={s.name} style={chipStyle}>
+              {inner}
+            </a>
+          ) : (
+            <div key={s.id} style={chipStyle}>
+              {inner}
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
-    </section>
+    </Section>
   );
 }

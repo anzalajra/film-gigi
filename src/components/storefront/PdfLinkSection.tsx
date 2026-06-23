@@ -1,5 +1,6 @@
-import { FileText } from "lucide-react";
+import { Download } from "lucide-react";
 import { uploadFileUrl } from "@/lib/utils";
+import { Section, Button } from "./ds";
 
 export default function PdfLinkSection({ pdfUrl }: { pdfUrl: string }) {
   if (!pdfUrl) return null;
@@ -8,32 +9,39 @@ export default function PdfLinkSection({ pdfUrl }: { pdfUrl: string }) {
   const downloadUrl = uploadFileUrl(pdfUrl, { download: true });
 
   return (
-    <section className="py-12 px-4">
-      <div className="max-w-3xl mx-auto space-y-6">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border border-white/10 rounded-2xl p-6">
-          <div>
-            <p className="font-semibold text-white mb-1">Rincian Proyek Film</p>
-            <p className="text-white/50 text-sm">Lihat atau unduh proposal lengkap untuk detail anggaran dan timeline produksi.</p>
-          </div>
-          <a
-            href={downloadUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 px-6 py-3 border border-white/20 rounded-xl text-white text-sm hover:border-[#f5c842] hover:text-[#f5c842] transition-colors whitespace-nowrap"
-          >
-            <FileText size={16} />
-            Unduh PDF
-          </a>
-        </div>
-
-        <div className="rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02]">
-          <iframe
-            src={`${viewerUrl}#view=FitH`}
-            title="Rincian Proyek Film"
-            className="w-full h-[60vh] sm:h-[80vh]"
-          />
-        </div>
+    <Section id="proposal" eyebrow="Proposal Film Gigi" narrow center>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "var(--space-5)",
+          gap: "1rem",
+          flexWrap: "wrap",
+        }}
+      >
+        <p style={{ color: "var(--ink-60)", fontSize: "var(--text-sm)", margin: 0, textAlign: "left" }}>
+          Lihat ringkasan proposal kami — detail anggaran dan timeline produksi.
+        </p>
+        <Button variant="ghostGold" size="sm" pill={false} href={downloadUrl} icon={<Download size={14} />}>
+          Unduh PDF
+        </Button>
       </div>
-    </section>
+
+      <div
+        style={{
+          borderRadius: "var(--radius-2xl)",
+          overflow: "hidden",
+          border: "1px solid var(--line)",
+          background: "var(--fg-card-soft)",
+        }}
+      >
+        <iframe
+          src={`${viewerUrl}#view=FitH`}
+          title="Proposal Film Gigi"
+          style={{ width: "100%", height: "70vh", border: 0, display: "block" }}
+        />
+      </div>
+    </Section>
   );
 }

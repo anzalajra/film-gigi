@@ -1,68 +1,150 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
+import { Button } from "./ds";
 
-const navLinks = [
+const NAV_LINKS = [
   { href: "#synopsis", label: "Sinopsis" },
-  { href: "#video", label: "Trailer" },
+  { href: "#trailer", label: "Trailer" },
   { href: "#donasi", label: "Donasi" },
   { href: "#tim", label: "Tim" },
-  { href: "#sponsor", label: "Sponsor" },
   { href: "#kontak", label: "Kontak" },
 ];
 
 export default function Navbar({ logoUrl }: { logoUrl?: string }) {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const linkStyle: CSSProperties = {
+    fontSize: "var(--text-sm)",
+    color: "var(--ink-60)",
+    textDecoration: "none",
+    transition: "color var(--dur-fast)",
+  };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/90 backdrop-blur border-b border-white/10">
-      <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <a href="#" className="flex items-center gap-2">
+    <nav
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 50,
+        background: scrolled ? "rgba(10,10,10,0.92)" : "rgba(10,10,10,0.65)",
+        backdropFilter: "blur(var(--backdrop-blur))",
+        WebkitBackdropFilter: "blur(var(--backdrop-blur))",
+        borderBottom: `1px solid ${scrolled ? "var(--line)" : "transparent"}`,
+        transition:
+          "background var(--dur-base) var(--ease-standard), border-color var(--dur-base) var(--ease-standard)",
+      }}
+    >
+      <div
+        className="fg-nav-inner"
+        style={{
+          maxWidth: "var(--max-wide)",
+          margin: "0 auto",
+          padding: "0 var(--gutter)",
+          height: "var(--nav-height)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <a
+          href="#hero"
+          className="fg-logo"
+          style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+          onClick={() => setOpen(false)}
+        >
           {logoUrl ? (
-            <Image src={logoUrl} alt="Film Gigi" width={120} height={40} className="h-8 w-auto object-contain" />
+            <Image
+              src={logoUrl}
+              alt="Film Gigi"
+              width={140}
+              height={46}
+              className="object-contain"
+              style={{ height: "2.6rem", width: "auto" }}
+            />
           ) : (
-            <span className="text-[#f5f5f5] font-bold tracking-widest uppercase text-sm">Film Gigi</span>
+            <span
+              style={{
+                color: "var(--ink)",
+                fontWeight: "var(--weight-bold)" as CSSProperties["fontWeight"],
+                letterSpacing: "var(--tracking-wide)",
+                textTransform: "uppercase",
+                fontSize: "var(--text-sm)",
+              }}
+            >
+              Film Gigi
+            </span>
           )}
         </a>
 
-        {/* Desktop nav */}
-        <ul className="hidden md:flex items-center gap-6">
-          {navLinks.map((l) => (
+        {/* Desktop links */}
+        <ul
+          className="fg-desktop-nav"
+          style={{ display: "flex", alignItems: "center", gap: "1.5rem", listStyle: "none", margin: 0, padding: 0 }}
+        >
+          {NAV_LINKS.map((l) => (
             <li key={l.href}>
-              <a href={l.href} className="text-sm text-white/60 hover:text-[#f5c842] transition-colors">
+              <a href={l.href} className="fg-nav-link" style={linkStyle}>
                 {l.label}
               </a>
             </li>
           ))}
+          <li>
+            <Button variant="primary" size="sm" href="#donasi">
+              Dukung
+            </Button>
+          </li>
         </ul>
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden text-white/70 hover:text-white"
+          className="fg-mobile-toggle"
           onClick={() => setOpen(!open)}
           aria-label="Menu"
+          style={{ display: "none", background: "none", border: "none", color: "var(--ink-70)", cursor: "pointer", padding: 4 }}
         >
-          {open ? <X size={22} /> : <Menu size={22} />}
+          {open ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile drawer */}
       {open && (
-        <div className="md:hidden bg-[#0f0f0f] border-t border-white/10 px-4 py-4">
-          <ul className="flex flex-col gap-4">
-            {navLinks.map((l) => (
+        <div
+          className="fg-anim-fade"
+          style={{
+            background: "var(--fg-night)",
+            borderTop: "1px solid var(--line)",
+            padding: "var(--space-4) var(--gutter) var(--space-6)",
+          }}
+        >
+          <ul style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)", listStyle: "none", margin: 0, padding: 0 }}>
+            {NAV_LINKS.map((l) => (
               <li key={l.href}>
                 <a
                   href={l.href}
-                  className="block text-white/70 hover:text-[#f5c842] text-sm py-1 transition-colors"
                   onClick={() => setOpen(false)}
+                  style={{ display: "block", color: "var(--ink-70)", textDecoration: "none", fontSize: "var(--text-base)", padding: "0.35rem 0" }}
                 >
                   {l.label}
                 </a>
               </li>
             ))}
+            <li style={{ marginTop: "0.5rem" }}>
+              <Button variant="primary" full href="#donasi" onClick={() => setOpen(false)}>
+                Dukung Sekarang
+              </Button>
+            </li>
           </ul>
         </div>
       )}

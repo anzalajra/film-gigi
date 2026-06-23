@@ -144,3 +144,205 @@
 .prose strong {
   color: #f5f5f5;
 }
+
+/* ============================================================
+   Film Gigi storefront — design system tokens (scoped to .fg)
+   Ported from the Claude Design "Film Gigi" design system.
+   ============================================================ */
+.fg {
+  /* Surfaces */
+  --fg-black: #0a0a0a;
+  --fg-night: #0f0f0f;
+  --fg-card: #141414;
+  --fg-card-soft: rgba(255, 255, 255, 0.02);
+  --fg-card-gold: rgba(245, 200, 66, 0.05);
+
+  /* Brand gold */
+  --gold: #f5c842;
+  --gold-amber: #f59e0b;
+  --gold-soft: rgba(245, 200, 66, 0.1);
+  --gold-line: rgba(245, 200, 66, 0.5);
+  --gold-onfill: #000000;
+
+  /* Ink */
+  --ink: #f5f5f5;
+  --ink-85: rgba(245, 245, 245, 0.85);
+  --ink-80: rgba(245, 245, 245, 0.80);
+  --ink-70: rgba(255, 255, 255, 0.70);
+  --ink-60: rgba(255, 255, 255, 0.60);
+  --ink-50: rgba(255, 255, 255, 0.50);
+  --ink-40: rgba(255, 255, 255, 0.40);
+  --ink-30: rgba(255, 255, 255, 0.30);
+  --ink-20: rgba(255, 255, 255, 0.20);
+
+  /* Hairlines */
+  --line: rgba(255, 255, 255, 0.10);
+  --line-soft: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.20);
+  --line-faint: rgba(255, 255, 255, 0.05);
+
+  /* Semantic */
+  --wa-green: #25d366;
+  --wa-green-soft: rgba(37, 211, 102, 0.1);
+  --wa-green-line: rgba(37, 211, 102, 0.3);
+  --danger: #f87171;
+
+  /* Kampung palette */
+  --k-yellow: #f5c842;
+  --k-orange: #ef7d3a;
+  --k-red: #e0483f;
+  --k-magenta: #c8467f;
+  --k-purple: #7c5cc4;
+  --k-blue: #2f7dd1;
+  --k-teal: #2bb6a8;
+  --k-green: #7bbf4c;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+
+  /* Layout */
+  --gutter: 1rem;
+  --max-prose: 48rem;
+  --max-content: 64rem;
+  --max-wide: 72rem;
+  --nav-height: 4rem;
+
+  /* Radius */
+  --radius-md: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-pill: 9999px;
+
+  /* Shadows */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  --shadow-qr: 0 10px 25px rgba(0, 0, 0, 0.4);
+  --backdrop-blur: 8px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 150ms;
+  --dur-base: 300ms;
+  --dur-slow: 700ms;
+  --dur-bar: 1000ms;
+
+  /* Type families (sans inherits the app font) */
+  --font-heading: inherit;
+  --font-mono: var(--font-geist-mono, ui-monospace, "SF Mono", Menlo, monospace);
+
+  /* Type scale */
+  --text-eyebrow: 0.75rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+  --text-7xl: 4.5rem;
+
+  /* Weights */
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Line heights */
+  --leading-none: 1;
+  --leading-tight: 1.15;
+  --leading-snug: 1.35;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.65;
+
+  /* Tracking */
+  --tracking-eyebrow: 0.3em;
+  --tracking-tight: -0.02em;
+  --tracking-wide: 0.05em;
+
+  /* Semantic type roles */
+  --type-h2: var(--weight-bold) var(--text-2xl) / var(--leading-tight) var(--font-heading);
+  --type-quote: var(--weight-light) var(--text-2xl) / var(--leading-relaxed) var(--font-heading);
+
+  background: var(--fg-black);
+  color: var(--ink);
+}
+
+/* —— Reveal-on-scroll —— */
+.fg [data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--dur-slow) var(--ease-out),
+              transform var(--dur-slow) var(--ease-out);
+}
+.fg [data-reveal][data-revealed] {
+  opacity: 1;
+  transform: none;
+}
+.fg [data-reveal="fade"] { transform: none; }
+.fg [data-reveal][data-delay="1"] { transition-delay: 80ms; }
+.fg [data-reveal][data-delay="2"] { transition-delay: 160ms; }
+.fg [data-reveal][data-delay="3"] { transition-delay: 240ms; }
+.fg [data-reveal][data-delay="4"] { transition-delay: 320ms; }
+
+/* —— Keyframes —— */
+@keyframes fg-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fg-scale-in { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: scale(1); } }
+@keyframes fg-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+@keyframes fg-ken-burns { from { transform: scale(1); } to { transform: scale(1.08); } }
+@keyframes fg-pulse-ring {
+  0%   { box-shadow: 0 0 0 0 var(--gold-soft); }
+  70%  { box-shadow: 0 0 0 12px rgba(245, 200, 66, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(245, 200, 66, 0); }
+}
+
+.fg-anim-fade { animation: fg-fade-in var(--dur-slow) var(--ease-out); }
+.fg-anim-scale { animation: fg-scale-in var(--dur-base) var(--ease-out); }
+.fg-anim-bounce { animation: fg-bounce 1.6s var(--ease-standard) infinite; }
+.fg-anim-kenburns { animation: fg-ken-burns 16s var(--ease-standard) infinite alternate; }
+
+/* —— Layout helpers —— */
+.fg-hero-title { font-size: clamp(3.25rem, 18vw, 7rem); }
+.fg-nav-link:hover { color: var(--gold) !important; }
+
+.fg-nav-inner { position: relative; }
+.fg-mobile-toggle { display: none; }
+@media (max-width: 767px) {
+  .fg-logo { position: absolute; left: 50%; transform: translateX(-50%); }
+  .fg-desktop-nav { display: none !important; }
+  .fg-mobile-toggle { display: flex !important; }
+}
+
+.fg-statement { display: flex; flex-direction: column; gap: var(--space-8); align-items: center; }
+@media (min-width: 768px) {
+  .fg-statement { flex-direction: row; gap: var(--space-12); }
+  .fg-statement--rev { flex-direction: row-reverse; }
+}
+
+.fg-team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-6); }
+@media (min-width: 640px) { .fg-team-grid { grid-template-columns: repeat(4, 1fr); } }
+
+.fg-pkg-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
+@media (min-width: 640px) { .fg-pkg-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .fg-pkg-grid { grid-template-columns: repeat(3, 1fr); } }
+
+.fg-donor-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-4); }
+@media (min-width: 640px) { .fg-donor-grid { grid-template-columns: repeat(2, 1fr); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .fg [data-reveal] { opacity: 1; transform: none; }
+}

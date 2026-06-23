@@ -1,61 +1,153 @@
-import Image from "next/image";
+"use client";
+
+import { type CSSProperties } from "react";
+import { Heart, ArrowDown } from "lucide-react";
+import { Button } from "./ds";
 
 interface Props {
+  eyebrow?: string;
   title: string;
   subtitle: string;
   heroImageUrl: string;
+  logoUrl?: string;
 }
 
-export default function HeroSection({ title, subtitle, heroImageUrl }: Props) {
+export default function HeroSection({ eyebrow, title, subtitle, heroImageUrl, logoUrl }: Props) {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 pt-16 overflow-hidden"
+      style={{
+        position: "relative",
+        minHeight: "100svh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        padding: "0 var(--gutter)",
+        paddingTop: "var(--nav-height)",
+        overflow: "hidden",
+      }}
     >
-      {heroImageUrl && (
-        <div className="absolute inset-0 z-0">
-          <Image
+      {/* Background still */}
+      <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+        {heroImageUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
             src={heroImageUrl}
-            alt="Hero"
-            fill
-            className="object-cover opacity-25"
-            priority
+            alt=""
+            className="fg-anim-kenburns"
+            style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.25 }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/60 via-transparent to-[#0a0a0a]" />
-        </div>
-      )}
+        )}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(to bottom, rgba(10,10,10,0.6), transparent 40%, var(--fg-black))",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "radial-gradient(ellipse at 50% 40%, rgba(245,200,66,0.08), transparent 60%)",
+          }}
+        />
+      </div>
 
-      <div className="relative z-10 max-w-3xl mx-auto">
-        <p className="uppercase tracking-[0.3em] text-[#f5c842] text-xs mb-6 font-medium">
-          Crowdfunding · Final Project
-        </p>
-        <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white mb-6 leading-none">
-          {title}
+      <div style={{ position: "relative", zIndex: 10, maxWidth: "48rem", margin: "0 auto" }}>
+        {eyebrow && (
+          <p
+            style={{
+              textTransform: "uppercase",
+              letterSpacing: "var(--tracking-eyebrow)",
+              color: "var(--gold)",
+              fontSize: "var(--text-eyebrow)",
+              fontWeight: "var(--weight-medium)" as CSSProperties["fontWeight"],
+              margin: "0 0 var(--space-6)",
+            }}
+          >
+            {eyebrow}
+          </p>
+        )}
+        <h1 className="fg-hero-title" style={{ margin: "0 0 var(--space-6)" }}>
+          {logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={logoUrl}
+              alt={title}
+              style={{
+                display: "block",
+                width: "100%",
+                maxWidth: "min(17rem, 50vw)",
+                height: "auto",
+                margin: "0 auto",
+                objectFit: "contain",
+                filter: "drop-shadow(0 8px 40px rgba(0,0,0,0.5))",
+              }}
+            />
+          ) : (
+            <span
+              style={{
+                display: "block",
+                color: "var(--ink)",
+                fontWeight: "var(--weight-bold)" as CSSProperties["fontWeight"],
+                lineHeight: "var(--leading-none)",
+                letterSpacing: "var(--tracking-tight)",
+              }}
+            >
+              {title}
+            </span>
+          )}
         </h1>
         {subtitle && (
-          <p className="text-white/60 text-lg max-w-xl mx-auto leading-relaxed">{subtitle}</p>
+          <p
+            style={{
+              color: "var(--ink-60)",
+              fontSize: "var(--text-lg)",
+              maxWidth: "36rem",
+              margin: "0 auto",
+              lineHeight: "var(--leading-relaxed)",
+            }}
+          >
+            {subtitle}
+          </p>
         )}
-        <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-          <a
-            href="#donasi"
-            className="inline-flex items-center justify-center px-8 py-3 bg-[#f5c842] text-black font-semibold rounded-full hover:bg-[#f5c842]/90 transition-colors text-sm"
-          >
+        <div
+          style={{
+            marginTop: "var(--space-10)",
+            display: "flex",
+            gap: "var(--space-4)",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}
+        >
+          <Button variant="primary" size="lg" href="#donasi" icon={<Heart size={17} fill="currentColor" />}>
             Dukung Sekarang
-          </a>
-          <a
-            href="#synopsis"
-            className="inline-flex items-center justify-center px-8 py-3 border border-white/20 text-white rounded-full hover:border-white/40 transition-colors text-sm"
-          >
+          </Button>
+          <Button variant="secondary" size="lg" href="#synopsis">
             Pelajari Film
-          </a>
+          </Button>
         </div>
       </div>
 
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-40 z-10">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M10 4v12M4 10l6 6 6-6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </div>
+      <a
+        href="#synopsis"
+        className="fg-anim-bounce"
+        style={{
+          position: "absolute",
+          bottom: "2.5rem",
+          left: "50%",
+          transform: "translateX(-50%)",
+          opacity: 0.4,
+          zIndex: 10,
+          color: "var(--ink)",
+        }}
+        aria-label="Scroll"
+      >
+        <ArrowDown size={22} strokeWidth={1.5} />
+      </a>
     </section>
   );
 }

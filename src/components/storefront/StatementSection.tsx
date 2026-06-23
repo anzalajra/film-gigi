@@ -1,61 +1,78 @@
-import Image from "next/image";
+import { type CSSProperties } from "react";
 import { Quote } from "lucide-react";
+import { Section } from "./ds";
 
 interface Props {
   sectionId: string;
   label: string;
   name?: string;
-  imageUrl: string;
+  imageUrl?: string;
   quote: string;
   reverse?: boolean;
   dark?: boolean;
 }
 
-export default function StatementSection({
-  sectionId,
-  label,
-  name,
-  imageUrl,
-  quote,
-  reverse,
-  dark,
-}: Props) {
+export default function StatementSection({ sectionId, label, name, imageUrl, quote, reverse, dark }: Props) {
   if (!imageUrl && !quote) return null;
 
   return (
-    <section id={sectionId} className={`py-24 px-4 ${dark ? "bg-[#0f0f0f]" : ""}`}>
-      <div className="max-w-4xl mx-auto">
-        <p className="uppercase tracking-[0.3em] text-[#f5c842] text-xs mb-4 font-medium">{label}</p>
-        <div className="w-12 h-px bg-[#f5c842] mb-10" />
-
-        <div
-          className={`flex flex-col gap-8 md:gap-12 items-center ${
-            reverse ? "md:flex-row-reverse" : "md:flex-row"
-          }`}
-        >
-          {imageUrl && (
-            <div className="shrink-0">
-              <Image
-                src={imageUrl}
-                alt={name || label}
-                width={320}
-                height={400}
-                className="w-56 md:w-64 h-auto rounded-2xl object-cover border border-white/10"
-              />
-            </div>
-          )}
-
-          {quote && (
-            <div className="flex-1">
-              <Quote size={32} className="text-[#f5c842]/40 mb-4" />
-              <blockquote className="text-xl md:text-2xl text-white/85 font-light leading-relaxed italic whitespace-pre-line">
-                {quote}
-              </blockquote>
-              {name && <p className="mt-6 text-[#f5c842] font-semibold">{name}</p>}
-            </div>
+    <Section id={sectionId} eyebrow={label} band={dark}>
+      <div className={reverse ? "fg-statement fg-statement--rev" : "fg-statement"}>
+        <div style={{ flexShrink: 0 }}>
+          <div
+            style={{
+              width: "14rem",
+              height: "17rem",
+              borderRadius: "var(--radius-2xl)",
+              border: "1px solid var(--line)",
+              background: "linear-gradient(150deg, var(--fg-card) 0%, #1c1c1c 100%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              overflow: "hidden",
+            }}
+          >
+            {imageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={imageUrl} alt={name || label} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            ) : (
+              <span style={{ fontSize: "5rem", fontWeight: 700, color: "var(--ink-20)" }}>
+                {(name || label).charAt(0)}
+              </span>
+            )}
+          </div>
+        </div>
+        <div style={{ flex: 1 }}>
+          <Quote size={32} color="var(--gold)" fill="var(--gold)" style={{ opacity: 0.4, marginBottom: "var(--space-4)" }} />
+          <blockquote
+            style={
+              {
+                fontWeight: "var(--weight-light)",
+                fontSize: "var(--text-2xl)",
+                color: "var(--ink-85)",
+                lineHeight: "var(--leading-relaxed)",
+                fontStyle: "italic",
+                margin: 0,
+                whiteSpace: "pre-line",
+                textWrap: "pretty",
+              } as CSSProperties
+            }
+          >
+            {quote}
+          </blockquote>
+          {name && (
+            <p
+              style={{
+                marginTop: "var(--space-6)",
+                color: "var(--gold)",
+                fontWeight: "var(--weight-semibold)" as CSSProperties["fontWeight"],
+              }}
+            >
+              — {name}
+            </p>
           )}
         </div>
       </div>
-    </section>
+    </Section>
   );
 }

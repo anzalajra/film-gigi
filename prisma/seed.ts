@@ -24,9 +24,16 @@ async function main() {
     update: {},
     create: {
       id: 1,
-      heroTitle: "Crowdfunding Film Gigi",
+      heroEyebrow: "Crowdfunding · Final Project",
+      heroTitle: "Gigi",
       heroSubtitle: "Bantu kami mewujudkan film ini.",
       targetAmount: 20000000,
+      whyPoints: JSON.stringify([
+        { icon: "users", title: "Untuk anak muda", text: "Cerita yang relatable soal body image dan rasa cukup." },
+        { icon: "sparkles", title: "Diputar gratis", text: "Roadshow ke sekolah & komunitas tanpa biaya, lengkap dengan sesi diskusi." },
+        { icon: "heart", title: "Karya lokal", text: "Sepenuhnya digarap mahasiswa, mengangkat kampung dan wajah Indonesia." },
+        { icon: "message", title: "Membuka obrolan", text: "Materi pendamping untuk guru & orang tua membahas penerimaan diri." },
+      ]),
     },
   });
 

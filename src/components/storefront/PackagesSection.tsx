@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { Check, X, Download, QrCode } from "lucide-react";
+import { useState, type CSSProperties } from "react";
+import { X, Download, QrCode } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
 import { convertQrisToDynamic, isValidQris } from "@/lib/qris";
 import QRCode from "qrcode";
+import { Section, ProgressBar, PackageCard, Button, Badge } from "./ds";
 
 interface Package {
   id: number;
@@ -17,23 +18,21 @@ interface Package {
 interface Props {
   packages: Package[];
   qrisString?: string;
+  totalRaised: number;
+  target: number;
+  parallax?: string;
 }
 
-export default function PackagesSection({ packages, qrisString }: Props) {
-  const [modal, setModal] = useState<{
-    pkg: Package;
-    qrDataUrl: string;
-  } | null>(null);
+export default function PackagesSection({ packages, qrisString, totalRaised, target, parallax }: Props) {
+  const [modal, setModal] = useState<{ pkg: Package; qrDataUrl: string } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handlePickPackage = async (pkg: Package) => {
+  const handlePick = async (pkg: Package) => {
     if (!qrisString || !isValidQris(qrisString)) {
-      // Fallback: scroll to donasi section if QRIS not configured
-      document.getElementById("donasi")?.scrollIntoView({ behavior: "smooth" });
+      document.getElementById("donasi-langsung")?.scrollIntoView({ behavior: "smooth" });
       return;
     }
-
     setLoading(true);
     setError("");
     try {
@@ -51,115 +50,104 @@ export default function PackagesSection({ packages, qrisString }: Props) {
     }
   };
 
-  if (!packages.length) return null;
-
   return (
     <>
-      <section id="paket" className="py-24 px-4">
-        <div className="max-w-5xl mx-auto">
-          <p className="uppercase tracking-[0.3em] text-[#f5c842] text-xs mb-4 font-medium">Paket Dukungan</p>
-          <div className="w-12 h-px bg-[#f5c842] mb-10" />
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {packages.map((pkg, i) => {
-              let benefits: string[] = [];
-              try { benefits = JSON.parse(pkg.benefits); } catch {}
-              return (
-                <div
-                  key={pkg.id}
-                  className={`rounded-2xl border p-6 flex flex-col gap-4 ${i === 0 ? "border-[#f5c842]/50 bg-[#f5c842]/5" : "border-white/10 bg-white/2"}`}
-                >
-                  {i === 0 && (
-                    <span className="self-start text-xs bg-[#f5c842] text-black px-3 py-1 rounded-full font-semibold">Populer</span>
-                  )}
-                  <div>
-                    <h3 className="font-bold text-white text-lg">{pkg.name}</h3>
-                    <p className="text-[#f5c842] font-semibold text-xl mt-1">{formatRupiah(pkg.amount)}</p>
-                  </div>
-                  <p className="text-white/60 text-sm">{pkg.description}</p>
-                  {benefits.length > 0 && (
-                    <ul className="flex flex-col gap-2 mt-auto">
-                      {benefits.map((b, bi) => (
-                        <li key={bi} className="flex items-start gap-2 text-sm text-white/70">
-                          <Check size={14} className="text-[#f5c842] mt-0.5 shrink-0" />
-                          {b}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => handlePickPackage(pkg)}
-                    disabled={loading}
-                    className="mt-4 block text-center py-2.5 border border-[#f5c842]/40 rounded-xl text-[#f5c842] text-sm hover:bg-[#f5c842] hover:text-black transition-colors font-medium disabled:opacity-50 cursor-pointer"
-                  >
-                    Pilih Paket
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-          {error && <p className="text-red-400 text-sm mt-4 text-center">{error}</p>}
+      <Section id="donasi" eyebrow="Dukung Film Ini" parallax={parallax} center>
+        <div data-reveal style={{ marginBottom: "var(--space-12)" }}>
+          <ProgressBar raised={totalRaised} target={target} />
         </div>
-      </section>
 
-      {/* QRIS Modal */}
+        {packages.length > 0 && (
+          <>
+            <p style={{ color: "var(--ink-60)", fontSize: "var(--text-sm)", margin: "0 0 var(--space-6)" }}>
+              Pilih paket dukungan yang pas buat kamu. Pembayaran lewat QRIS — gampang dan aman.
+            </p>
+            <div className="fg-pkg-grid">
+              {packages.map((p, i) => {
+                let benefits: string[] = [];
+                try {
+                  benefits = JSON.parse(p.benefits);
+                } catch {}
+                return (
+                  <div data-reveal data-delay={String((i % 3) + 1)} key={p.id}>
+                    <PackageCard
+                      name={p.name}
+                      amount={p.amount}
+                      description={p.description}
+                      benefits={benefits}
+                      popular={i === 0}
+                      onPick={() => handlePick(p)}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+            {error && <p style={{ color: "var(--danger)", fontSize: "var(--text-sm)", marginTop: "var(--space-4)" }}>{error}</p>}
+            {loading && <p style={{ color: "var(--ink-50)", fontSize: "var(--text-sm)", marginTop: "var(--space-4)" }}>Membuat QR…</p>}
+          </>
+        )}
+      </Section>
+
       {modal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ position: "fixed", inset: 0, zIndex: 60, display: "flex", alignItems: "center", justifyContent: "center", padding: "var(--gutter)" }}
           onClick={() => setModal(null)}
         >
-          {/* Backdrop */}
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-
-          {/* Modal Content */}
+          <div className="fg-anim-fade" style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)" }} />
           <div
-            className="relative bg-[#141414] border border-white/10 rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl"
+            className="fg-anim-scale"
             onClick={(e) => e.stopPropagation()}
+            style={{
+              position: "relative",
+              background: "var(--fg-card)",
+              border: "1px solid var(--line)",
+              borderRadius: "var(--radius-2xl)",
+              padding: "var(--space-8)",
+              maxWidth: "26rem",
+              width: "100%",
+              boxShadow: "var(--shadow-modal)",
+            }}
           >
-            {/* Close button */}
             <button
-              type="button"
               onClick={() => setModal(null)}
-              className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors cursor-pointer"
+              aria-label="Tutup"
+              style={{ position: "absolute", top: "1rem", right: "1rem", background: "none", border: "none", color: "var(--ink-40)", cursor: "pointer", display: "flex" }}
             >
               <X size={20} />
             </button>
-
-            {/* Header */}
-            <div className="text-center mb-6">
-              <div className="inline-flex items-center gap-2 bg-[#f5c842]/10 text-[#f5c842] px-4 py-1.5 rounded-full text-xs font-semibold mb-4">
-                <QrCode size={14} />
+            <div style={{ textAlign: "center", marginBottom: "var(--space-6)" }}>
+              <Badge variant="goldSoft" icon={<QrCode size={14} />}>
                 QRIS Payment
-              </div>
-              <h3 className="text-white font-bold text-lg">{modal.pkg.name}</h3>
-              <p className="text-[#f5c842] font-bold text-2xl mt-1">{formatRupiah(modal.pkg.amount)}</p>
-            </div>
-
-            {/* QR Code */}
-            <div className="flex flex-col items-center gap-4">
-              <div className="bg-white p-4 rounded-2xl shadow-lg">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={modal.qrDataUrl} alt="QRIS QR Code" width={280} height={280} />
-              </div>
-              <p className="text-white/40 text-xs text-center">
-                Scan dengan aplikasi mobile banking atau e-wallet
+              </Badge>
+              <h3 style={{ color: "var(--ink)", fontWeight: "var(--weight-bold)" as CSSProperties["fontWeight"], fontSize: "var(--text-lg)", margin: "var(--space-4) 0 0" }}>
+                {modal.pkg.name}
+              </h3>
+              <p style={{ color: "var(--gold)", fontWeight: "var(--weight-bold)" as CSSProperties["fontWeight"], fontSize: "var(--text-2xl)", margin: "0.25rem 0 0" }}>
+                {formatRupiah(modal.pkg.amount)}
               </p>
-              <div className="flex gap-3 w-full">
-                <a
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "var(--space-4)" }}>
+              <div style={{ background: "#fff", padding: "1rem", borderRadius: "var(--radius-2xl)", boxShadow: "var(--shadow-qr)" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={modal.qrDataUrl} alt="QRIS QR Code" width={240} height={240} />
+              </div>
+              <p style={{ color: "var(--ink-40)", fontSize: "var(--text-xs)", textAlign: "center", margin: 0 }}>
+                Scan dengan aplikasi mobile banking atau e-wallet apa pun.
+              </p>
+              <div style={{ display: "flex", gap: "0.75rem", width: "100%" }}>
+                <Button
+                  variant="secondary"
+                  pill={false}
+                  full
                   href={modal.qrDataUrl}
                   download={`qris-${modal.pkg.name.toLowerCase().replace(/\s+/g, "-")}.png`}
-                  className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-white/15 rounded-xl text-white/70 text-sm hover:border-white/30 transition-colors"
+                  icon={<Download size={14} />}
                 >
-                  <Download size={14} />
-                  Download QR
-                </a>
-                <button
-                  type="button"
-                  onClick={() => setModal(null)}
-                  className="flex-1 py-2.5 bg-[#f5c842] text-black rounded-xl text-sm font-semibold hover:bg-[#f5c842]/90 transition-colors cursor-pointer"
-                >
+                  Unduh QR
+                </Button>
+                <Button variant="primary" pill={false} full onClick={() => setModal(null)}>
                   Selesai
-                </button>
+                </Button>
               </div>
             </div>
           </div>
