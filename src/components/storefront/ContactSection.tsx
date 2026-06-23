@@ -28,26 +28,27 @@ export default function ContactSection({ whatsapp, instagram, email }: Props) {
     <Section id="kontak" eyebrow="Kontak" band center narrow>
       <h2 style={{ font: "var(--type-h2)", color: "var(--ink)", margin: "0 0 var(--space-4)" } as CSSProperties}>
         Kami Terbuka Untuk Diskusi
-        <p style={{ color: "var(--ink-50)", fontSize: "var(--text-sm)", margin: "0 0 var(--space-10)" }}>
-          Kami sangat memerlukan bantuan dan dukungan untuk eksekusi film Tugas Akhir ini. Kami sangat terbuka untuk diskusi dan melakukan pitcing. Anda dapat menghubungi kami di berbagai sosial media.
-        </p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-4)", justifyContent: "center" }}>
-          {waLink && (
-            <Button variant="whatsapp" href={waLink} icon={<MessageCircle size={16} />}>
-              WhatsApp
-            </Button>
-          )}
-          {igLink && (
-            <Button variant="secondary" pill={false} href={igLink} icon={<InstagramIcon />}>
-              Instagram
-            </Button>
-          )}
-          {email && (
-            <Button variant="secondary" pill={false} href={`mailto:${email}`} icon={<Mail size={16} />}>
-              Email
-            </Button>
-          )}
-        </div>
+      </h2>
+      <p style={{ color: "var(--ink-50)", fontSize: "var(--text-sm)", margin: "0 0 var(--space-10)" }}>
+        Kami sangat memerlukan bantuan dan dukungan untuk eksekusi film Tugas Akhir ini. Kami sangat terbuka untuk diskusi dan melakukan pitcing. Anda dapat menghubungi kami di berbagai sosial media.
+      </p>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-4)", justifyContent: "center" }}>
+        {waLink && (
+          <Button variant="whatsapp" href={waLink} icon={<MessageCircle size={16} />}>
+            WhatsApp
+          </Button>
+        )}
+        {igLink && (
+          <Button variant="secondary" pill={false} href={igLink} icon={<InstagramIcon />}>
+            Instagram
+          </Button>
+        )}
+        {email && (
+          <Button variant="secondary" pill={false} href={`mailto:${email}`} icon={<Mail size={16} />}>
+            Email
+          </Button>
+        )}
+      </div>
     </Section>
   );
 }
