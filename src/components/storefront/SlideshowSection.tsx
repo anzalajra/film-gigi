@@ -79,19 +79,31 @@ export default function SlideshowSection({ images }: { images: SlideImage[] }) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={img.imageUrl} alt={img.caption || "Film Gigi"} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               {img.caption && (
-                <div
-                  style={{
-                    position: "absolute",
-                    insetInline: 0,
-                    bottom: 0,
-                    background: "linear-gradient(to top, rgba(0,0,0,0.85), transparent)",
-                    padding: "var(--space-6) var(--space-4) var(--space-4)",
-                  }}
+                <span
+                  style={
+                    {
+                      position: "absolute",
+                      left: "var(--space-4)",
+                      bottom: "var(--space-4)",
+                      maxWidth: "calc(100% - 5rem)",
+                      background: "rgba(0,0,0,0.6)",
+                      backdropFilter: "blur(4px)",
+                      WebkitBackdropFilter: "blur(4px)",
+                      border: "1px solid var(--line)",
+                      borderRadius: "var(--radius-pill)",
+                      padding: "0.35rem 0.85rem",
+                      color: "var(--ink)",
+                      fontSize: "var(--text-xs)",
+                      lineHeight: "var(--leading-snug)",
+                      textAlign: "left",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    } as CSSProperties
+                  }
                 >
-                  <p style={{ color: "var(--ink-80)", fontSize: "var(--text-sm)", margin: 0, textAlign: "left" } as CSSProperties}>
-                    {img.caption}
-                  </p>
-                </div>
+                  {img.caption}
+                </span>
               )}
             </div>
           ))}

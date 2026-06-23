@@ -109,7 +109,7 @@ export function Section({ id, eyebrow, band, narrow, wide, center, parallax, chi
               height: "130%",
               objectFit: "cover",
               transform: "scale(1.3)",
-              opacity: 0.22,
+              opacity: 0.5,
               willChange: "transform",
               zIndex: 0,
             }}
@@ -119,7 +119,7 @@ export function Section({ id, eyebrow, band, narrow, wide, center, parallax, chi
               position: "absolute",
               inset: 0,
               background:
-                "linear-gradient(180deg, var(--fg-night), rgba(15,15,15,0.6) 50%, var(--fg-night))",
+                "linear-gradient(180deg, var(--fg-night) 0%, rgba(15,15,15,0.35) 45%, rgba(15,15,15,0.45) 55%, var(--fg-night) 100%)",
               zIndex: 0,
             }}
           />
@@ -458,6 +458,7 @@ export function PackageCard({
         gap: "var(--space-4)",
         height: "100%",
         boxSizing: "border-box",
+        textAlign: "left",
         background: popular ? "var(--fg-card-gold)" : "var(--fg-card-soft)",
         border: `1px solid ${popular ? "var(--gold-line)" : "var(--line)"}`,
         transition: "transform var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-standard)",
@@ -465,21 +466,21 @@ export function PackageCard({
       onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-4px)")}
       onMouseLeave={(e) => (e.currentTarget.style.transform = "none")}
     >
-      {popular && (
-        <span
-          style={{
-            alignSelf: "flex-start",
-            fontSize: "var(--text-xs)",
-            background: "var(--gold)",
-            color: "var(--gold-onfill)",
-            padding: "0.25rem 0.75rem",
-            borderRadius: "var(--radius-pill)",
-            fontWeight: "var(--weight-semibold)" as CSSProperties["fontWeight"],
-          }}
-        >
-          Populer
-        </span>
-      )}
+      <span
+        aria-hidden={!popular}
+        style={{
+          alignSelf: "flex-start",
+          visibility: popular ? "visible" : "hidden",
+          fontSize: "var(--text-xs)",
+          background: "var(--gold)",
+          color: "var(--gold-onfill)",
+          padding: "0.25rem 0.75rem",
+          borderRadius: "var(--radius-pill)",
+          fontWeight: "var(--weight-semibold)" as CSSProperties["fontWeight"],
+        }}
+      >
+        Populer
+      </span>
       <div>
         <h3
           style={{
@@ -503,7 +504,15 @@ export function PackageCard({
         </p>
       </div>
       {description && (
-        <p style={{ color: "var(--ink-60)", fontSize: "var(--text-sm)", margin: 0, lineHeight: "var(--leading-normal)" }}>
+        <p
+          style={{
+            color: "var(--ink-60)",
+            fontSize: "var(--text-sm)",
+            margin: 0,
+            lineHeight: "var(--leading-normal)",
+            minHeight: "calc(var(--text-sm) * var(--leading-normal) * 2)",
+          }}
+        >
           {description}
         </p>
       )}
@@ -514,7 +523,6 @@ export function PackageCard({
             flexDirection: "column",
             gap: "0.5rem",
             margin: 0,
-            marginTop: "auto",
             padding: 0,
             listStyle: "none",
           }}
@@ -540,7 +548,7 @@ export function PackageCard({
         type="button"
         onClick={onPick}
         style={{
-          marginTop: "var(--space-4)",
+          marginTop: "auto",
           padding: "0.7rem",
           border: "1px solid var(--gold-line)",
           borderRadius: "var(--radius-xl)",

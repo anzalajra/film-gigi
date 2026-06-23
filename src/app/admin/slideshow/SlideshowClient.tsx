@@ -88,6 +88,21 @@ export default function SlideshowClient({ images: initial }: { images: Slide[] }
     }
   };
 
+  const setCaptionLocal = (id: number, caption: string) =>
+    setImages((prev) => prev.map((x) => (x.id === id ? { ...x, caption } : x)));
+
+  const saveCaption = async (img: Slide) => {
+    const value = img.caption ?? "";
+    if (value === (initial.find((i) => i.id === img.id)?.caption ?? "")) return;
+    try {
+      await updateSlideImage(img.id, { caption: value });
+      toast.success("Caption disimpan");
+      router.refresh();
+    } catch {
+      toast.error("Gagal menyimpan caption");
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
@@ -121,7 +136,18 @@ export default function SlideshowClient({ images: initial }: { images: Slide[] }
               <div className="aspect-video relative">
                 <Image src={img.imageUrl} alt={img.caption ?? ""} fill className="object-cover" />
               </div>
-              {img.caption && <p className="text-xs text-white/60 px-3 py-2 truncate">{img.caption}</p>}
+              <div className="px-2.5 pt-2.5 pb-1">
+                <Input
+                  value={img.caption ?? ""}
+                  onChange={(e) => setCaptionLocal(img.id, e.target.value)}
+                  onBlur={() => saveCaption(img)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+                  }}
+                  placeholder="Caption (pojok kiri bawah foto)"
+                  className="text-xs px-2.5 py-1.5"
+                />
+              </div>
               <div className="flex justify-between items-center px-2 py-1.5 border-t border-white/8">
                 <Button
                   variant="ghost"
