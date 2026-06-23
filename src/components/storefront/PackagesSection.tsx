@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, type CSSProperties } from "react";
-import { X, Download, QrCode } from "lucide-react";
+import { X, Download, QrCode, CheckCircle2 } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
 import { convertQrisToDynamic, isValidQris } from "@/lib/qris";
 import QRCode from "qrcode";
 import { Section, ProgressBar, PackageCard, Button, Badge } from "./ds";
+import ConfirmDonationModal from "./ConfirmDonationModal";
 
 interface Package {
   id: number;
@@ -25,6 +26,7 @@ interface Props {
 
 export default function PackagesSection({ packages, qrisString, totalRaised, target, parallax }: Props) {
   const [modal, setModal] = useState<{ pkg: Package; qrDataUrl: string } | null>(null);
+  const [confirm, setConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -134,6 +136,9 @@ export default function PackagesSection({ packages, qrisString, totalRaised, tar
               <p style={{ color: "var(--ink-40)", fontSize: "var(--text-xs)", textAlign: "center", margin: 0 }}>
                 Scan dengan aplikasi mobile banking atau e-wallet apa pun.
               </p>
+              <Button variant="ghostGold" pill={false} full onClick={() => setConfirm(true)} icon={<CheckCircle2 size={15} />}>
+                Konfirmasi Donasi
+              </Button>
               <div style={{ display: "flex", gap: "0.75rem", width: "100%" }}>
                 <Button
                   variant="secondary"
@@ -151,6 +156,15 @@ export default function PackagesSection({ packages, qrisString, totalRaised, tar
               </div>
             </div>
           </div>
+          {confirm && (
+            <ConfirmDonationModal
+              defaultAmount={modal.pkg.amount}
+              onClose={() => {
+                setConfirm(false);
+                setModal(null);
+              }}
+            />
+          )}
         </div>
       )}
     </>

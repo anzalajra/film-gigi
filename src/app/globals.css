@@ -237,9 +237,12 @@
   --dur-slow: 700ms;
   --dur-bar: 1000ms;
 
-  /* Type families (sans inherits the app font) */
-  --font-heading: inherit;
+  /* Type families — Inter throughout, matching the design system */
+  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-heading: var(--font-sans);
   --font-mono: var(--font-geist-mono, ui-monospace, "SF Mono", Menlo, monospace);
+
+  font-family: var(--font-sans);
 
   /* Type scale */
   --text-eyebrow: 0.75rem;
@@ -280,6 +283,15 @@
 
   background: var(--fg-black);
   color: var(--ink);
+}
+
+/* Form controls don't inherit font-family by default — force Inter inside the storefront. */
+.fg,
+.fg button,
+.fg input,
+.fg textarea,
+.fg select {
+  font-family: var(--font-sans);
 }
 
 /* —— Reveal-on-scroll —— */
@@ -333,8 +345,9 @@
   .fg-statement--rev { flex-direction: row-reverse; }
 }
 
-.fg-team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-6); }
-@media (min-width: 640px) { .fg-team-grid { grid-template-columns: repeat(4, 1fr); } }
+.fg-team-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-6); }
+.fg-team-grid > * { width: calc((100% - var(--space-6)) / 2); }
+@media (min-width: 640px) { .fg-team-grid > * { width: calc((100% - 3 * var(--space-6)) / 4); } }
 
 .fg-pkg-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
 @media (min-width: 640px) { .fg-pkg-grid { grid-template-columns: repeat(2, 1fr); } }

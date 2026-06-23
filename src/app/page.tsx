@@ -144,7 +144,7 @@ export default async function StorefrontPage() {
           borderTop: "1px solid var(--line-faint)",
         }}
       >
-        © {new Date().getFullYear()} Film Gigi. Dibuat dengan <span style={{ color: "var(--gold)" }}>♥</span> oleh tim mahasiswa.
+        © {new Date().getFullYear()} Film Gigi. Dibuat dengan 🦷
       </footer>
     </main>
   );

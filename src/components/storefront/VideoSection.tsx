@@ -31,7 +31,7 @@ export default function VideoSection({ videoUrl, thumb }: Props) {
   const embedUrl = getEmbedUrl(videoUrl);
 
   return (
-    <Section id="trailer" eyebrow="Trailer" band center>
+    <Section id="trailer" eyebrow="Pre-Visual Film Gigi" band center>
       <div
         style={{
           position: "relative",
